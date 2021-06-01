@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct num {
+    int nums;
+    struct num *left;
+    struct num *right;
+};
+   
+bool find(int x, num* elem) {
+    if (elem == NULL) {
+        return false;
+    }
+    if (elem->nums == x) {
+        return true;
+    }
+    if (x < elem->nums) {
+        return find(x, elem->left);
+    }
+    else {
+        return find(x, elem->right);
+    }
+}
+
+struct num * addnum(int x, num *elem) {
+    if (elem == NULL) {
+        elem = new num;
+        elem->nums = x;
+        elem->left = NULL;
+        elem->right = NULL;
+    }
+    else {
+        if (x < elem->nums) {
+            elem->left = addnum(x, elem->left);
+        }
+        else {
+            elem->right = addnum(x, elem->right);
+        }
+    }
+    return elem;
+}
+
+void printout(num* elem) {
+    if (elem != NULL) {
+        if (elem->left == NULL) {
+            cout << elem->nums << endl;
+            if (elem->right != NULL) {
+                printout(elem->right);
+            }
+        }
+        else {
+            printout(elem->left);
+            cout << elem->nums << endl;
+            printout(elem->right);
+        }
+    }
+}
+
+int main() {
+    num* root;
+    root = NULL;
+    int x;
+    cin >> x;
+    while (x != 0) {
+        if (root == NULL) {
+            root = addnum(x, root);
+        }
+        else {
+            if (!find(x, root)) {
+                addnum(x, root);
+            }
+        }
+        cin >> x;
+    }
+    printout(root);
+    return 0;
+}
